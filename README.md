@@ -5,8 +5,8 @@ Next.js client application for the Vendor Tracker dashboard, built with **Next.j
 ## Features
 
 - **Two-Panel Dashboard:** Add new vendors (name, category, contact email) on the left and view/delete saved vendors on the right.
-- **Typed API Service Layer:** Centralized `fetch` helpers in `lib/api.ts` using strict TypeScript interfaces (`types/vendor.ts`).
-- **Real-Time Sync:** Automatically re-fetches vendor records from Amazon DynamoDB on initial load and after every create or delete mutation.
+- **Typed API Service Layer:** Centralized HTTP helpers in `lib/api.ts` use the vendor types in `types/vendor.ts`.
+- **Cached Vendor Data:** TanStack Query fetches vendor records and refreshes the list after create or delete mutations.
 
 ---
 
@@ -18,10 +18,18 @@ frontend/
 │   ├── globals.css           # Tailwind CSS imports
 │   ├── layout.tsx            # Root application layout
 │   └── page.tsx              # Two-panel vendor dashboard UI
+├── components/
+│   ├── AddVendorForm.tsx     # Vendor creation form
+│   ├── Header.tsx            # Authenticated user header
+│   └── VendorList.tsx        # Vendor list and delete controls
 ├── lib/
-│   └── api.ts                # REST API service layer (get, create, delete)
+│   ├── api.ts                # Authenticated REST API calls
+│   ├── mutations/
+│   │   └── vendors.ts        # Create/delete mutation hooks
+│   └── queries/
+│       └── vendors.ts        # Vendor query and cache keys
 ├── types/
-│   └── vendor.ts             # Vendor TypeScript interface
+│   └── vendor.ts             # Persisted vendor and create-input types
 ├── .env.local                # Local environment variables (gitignored)
 └── package.json
 ```

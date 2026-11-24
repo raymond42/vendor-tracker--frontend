@@ -1,7 +1,14 @@
 import { fetchAuthSession } from "aws-amplify/auth";
-import { Vendor } from "@/types/vendor";
+import type { NewVendor, Vendor } from "@/types/vendor";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const getVendorsUrl = (): string => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!baseUrl) {
+    throw new Error("NEXT_PUBLIC_API_URL is not configured.");
+  }
+
+  return new URL("vendors", `${baseUrl.replace(/\/+$/, "")}/`).toString();
+};
 
 // Retrieves the current user's JWT token from the active Amplify session
 const getAuthToken = async (): Promise<string> => {
@@ -13,7 +20,7 @@ const getAuthToken = async (): Promise<string> => {
 
 export const getVendors = async (): Promise<Vendor[]> => {
   const token = await getAuthToken();
-  const response = await fetch(`${BASE_URL}vendors`, {
+  const response = await fetch(getVendorsUrl(), {
     headers: { Authorization: token },
   });
   if (!response.ok) {
@@ -23,10 +30,10 @@ export const getVendors = async (): Promise<Vendor[]> => {
 };
 
 export const createVendor = async (
-  vendor: Omit<Vendor, "vendorId" | "createdAt">,
+  vendor: NewVendor,
 ): Promise<void> => {
   const token = await getAuthToken();
-  const response = await fetch(`${BASE_URL}vendors`, {
+  const response = await fetch(getVendorsUrl(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -42,7 +49,7 @@ export const createVendor = async (
 
 export const deleteVendor = async (vendorId: string): Promise<void> => {
   const token = await getAuthToken();
-  const response = await fetch(`${BASE_URL}vendors`, {
+  const response = await fetch(getVendorsUrl(), {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
