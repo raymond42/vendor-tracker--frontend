@@ -1,0 +1,257 @@
+/*
+ * AWS Amplify Authenticator theming.
+ *
+ * Amplify renders its own markup from `@aws-amplify/ui-react`, so these rules
+ * are the only styling in the app that cannot be expressed as Tailwind
+ * utilities or Motion props. Everything here is scoped to
+ * `[data-amplify-authenticator]`; application UI lives in `globals.css` tokens
+ * plus utilities.
+ */
+
+@keyframes authenticator-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+[data-amplify-authenticator] {
+  display: grid;
+  min-height: 100vh;
+  padding: 2.5rem 1.25rem;
+  place-items: center;
+
+  /* Amplify resolves its own colors from these custom properties, so setting
+     them here keeps labels, values and helper text legible on the dark glass
+     regardless of which stylesheet wins the cascade. */
+  --amplify-colors-font-primary: #f5f7ff;
+  --amplify-colors-font-secondary: rgba(226, 232, 255, 0.82);
+  --amplify-colors-font-tertiary: rgba(226, 232, 255, 0.68);
+  --amplify-components-field-label-color: rgba(233, 238, 255, 0.9);
+  --amplify-components-fieldcontrol-color: #f6f8ff;
+  --amplify-components-fieldcontrol-border-color: rgba(255, 255, 255, 0.16);
+  --amplify-components-fieldcontrol-focus-border-color: rgba(165, 180, 252, 0.95);
+  --amplify-components-fieldcontrol-disabled-color: rgba(226, 232, 255, 0.45);
+  --amplify-components-fieldcontrol-disabled-border-color: rgba(255, 255, 255, 0.08);
+  --amplify-components-fieldmessages-error-color: #fda4af;
+  --amplify-components-authenticator-modal-background-color: transparent;
+  --amplify-components-authenticator-router-background-color: transparent;
+  --amplify-components-authenticator-router-border-color: rgba(255, 255, 255, 0.12);
+  --amplify-components-authenticator-router-box-shadow: none;
+  --amplify-components-authenticator-state-inactive-background-color: rgba(255, 255, 255, 0.06);
+  --amplify-components-authenticator-or-container-color: rgba(233, 238, 255, 0.7);
+  --amplify-components-authenticator-or-container-or-line-background-color: transparent;
+}
+
+/* `withAuthenticator` renders a full-screen "modal" variation, whose default
+   50% black overlay fights the page gradient. */
+[data-amplify-authenticator][data-variation="modal"] {
+  background-color: transparent;
+}
+
+/* The sign-in panel Amplify actually renders is `[data-amplify-router]`, not
+   `.amplify-card`; style both so either markup gets the same glass surface. */
+[data-amplify-authenticator] [data-amplify-router],
+[data-amplify-authenticator] .amplify-card {
+  animation: authenticator-enter 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  width: min(27rem, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.75rem;
+  background-color: rgba(9, 12, 28, 0.55);
+  background-image: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  box-shadow:
+    0 40px 80px -36px rgba(3, 5, 20, 0.95),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(24px) saturate(150%);
+  overflow: hidden;
+}
+
+[data-amplify-authenticator] [data-amplify-container] {
+  width: min(27rem, 100%);
+  max-width: none;
+}
+
+[data-amplify-authenticator] .amplify-tabs__list {
+  border-top: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+[data-amplify-authenticator] .amplify-tabs__item {
+  border-top: 0;
+  border-bottom: 2px solid transparent;
+  padding: 0.9rem 0.75rem;
+  color: rgba(226, 232, 255, 0.72);
+}
+
+[data-amplify-authenticator] .amplify-tabs__item--active {
+  border-top: 0;
+  border-bottom-color: #a5b4fc;
+  color: #ffffff;
+}
+
+[data-amplify-authenticator] .amplify-heading {
+  color: #f4f6ff;
+  letter-spacing: -0.02em;
+}
+
+[data-amplify-authenticator] .amplify-text,
+[data-amplify-authenticator] a {
+  color: rgba(222, 228, 255, 0.8);
+}
+
+[data-amplify-authenticator] a {
+  font-weight: 500;
+}
+
+[data-amplify-authenticator] a:hover {
+  color: #ffffff;
+}
+
+[data-amplify-authenticator] .amplify-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(233, 238, 255, 0.9);
+}
+
+[data-amplify-authenticator] .amplify-input,
+[data-amplify-authenticator] .amplify-select {
+  min-height: 2.9rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background-color: rgba(6, 9, 22, 0.55);
+  padding: 0.7rem 0.95rem;
+  font-size: 0.9rem;
+  color: #f6f8ff;
+  -webkit-text-fill-color: #f6f8ff;
+  caret-color: #a5b4fc;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+[data-amplify-authenticator] .amplify-input::placeholder {
+  color: rgba(226, 232, 255, 0.42);
+  -webkit-text-fill-color: rgba(226, 232, 255, 0.42);
+}
+
+[data-amplify-authenticator] .amplify-input:hover,
+[data-amplify-authenticator] .amplify-select:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+[data-amplify-authenticator] .amplify-input:focus,
+[data-amplify-authenticator] .amplify-select:focus {
+  border-color: rgba(165, 180, 252, 0.95);
+  background-color: rgba(9, 13, 30, 0.75);
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Keep browser autofill from painting a light box over the dark field. */
+[data-amplify-authenticator] .amplify-input:-webkit-autofill,
+[data-amplify-authenticator] .amplify-input:-webkit-autofill:hover,
+[data-amplify-authenticator] .amplify-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #f6f8ff;
+  caret-color: #f6f8ff;
+  -webkit-box-shadow:
+    0 0 0 1000px #0b1024 inset,
+    0 0 0 1px rgba(165, 180, 252, 0.95) inset;
+}
+
+/* Reveal-password button that sits beside the input. */
+[data-amplify-authenticator] .amplify-field-group__control {
+  border-color: rgba(255, 255, 255, 0.16);
+  background-color: rgba(6, 9, 22, 0.55);
+  color: #f6f8ff;
+}
+
+[data-amplify-authenticator] .amplify-field-group__control:hover {
+  color: #ffffff;
+  background-color: rgba(9, 13, 30, 0.75);
+}
+
+[data-amplify-authenticator] .amplify-button {
+  transition:
+    filter 0.18s ease,
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+[data-amplify-authenticator] .amplify-button--primary {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0.85rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-image: linear-gradient(120deg, #6366f1 0%, #8b5cf6 52%, #22d3ee 100%);
+  box-shadow: 0 18px 40px -20px rgba(99, 102, 241, 0.9);
+}
+
+[data-amplify-authenticator] .amplify-button--primary:hover {
+  filter: brightness(1.08);
+}
+
+[data-amplify-authenticator] .amplify-button--primary:active {
+  filter: brightness(0.98);
+  transform: translateY(1px) scale(0.995);
+}
+
+[data-amplify-authenticator] .amplify-button--link {
+  border-color: transparent;
+  background-color: transparent;
+  color: rgba(222, 228, 255, 0.85);
+}
+
+[data-amplify-authenticator] .amplify-button--link:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+[data-amplify-authenticator] .amplify-alert {
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-radius: 0.85rem;
+  background-color: rgba(244, 63, 94, 0.12);
+  color: #fecdd3;
+}
+
+[data-amplify-authenticator] .amplify-divider {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-amplify-authenticator] [data-amplify-router],
+  [data-amplify-authenticator] .amplify-card {
+    animation: none;
+  }
+
+  [data-amplify-authenticator] .amplify-button,
+  [data-amplify-authenticator] .amplify-input,
+  [data-amplify-authenticator] .amplify-select,
+  [data-amplify-authenticator] .amplify-field-group__control,
+  [data-amplify-authenticator] .amplify-tabs__item {
+    transition-duration: 0.01ms;
+  }
+
+  [data-amplify-authenticator] .amplify-button--primary:active {
+    transform: none;
+  }
+}

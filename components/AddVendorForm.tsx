@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { motion } from "motion/react";
 import { useCreateVendor } from "@/lib/mutations/vendors";
 import type { NewVendor } from "@/types/vendor";
+import { cn } from "@/lib/utils";
+import Field from "@/components/ui/Field";
+import { fadeUp, glassPanel } from "@/components/ui/surfaces";
 
 const emptyVendor: NewVendor = {
   name: "",
@@ -14,6 +18,7 @@ const emptyVendor: NewVendor = {
 const AddVendorForm = () => {
   const [form, setForm] = useState<NewVendor>({ ...emptyVendor });
   const createVendorMutation = useCreateVendor();
+  const isSaving = createVendorMutation.isPending;
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,65 +28,110 @@ const AddVendorForm = () => {
   };
 
   return (
-    <section>
-      <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
-        Add New Vendor
-      </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <motion.section
+      {...fadeUp(0.08)}
+      className={cn(glassPanel, "p-6 sm:p-7")}
+    >
+      <div className="mb-6 flex items-start gap-3.5">
+        <span
+          aria-hidden="true"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/15 bg-white/7 text-indigo-200"
+        >
+          <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
+            <path
+              d="M12 5v14M5 12h14"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+            />
+          </svg>
+        </span>
+        <div>
+          <h2 className="text-base font-semibold tracking-tight text-white">
+            Add new vendor
+          </h2>
+          <p className="mt-0.5 text-sm text-white/45">
+            Track a supplier, tool or partner in seconds.
+          </p>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
         {createVendorMutation.isError && (
-          <p role="alert" className="rounded bg-red-100 p-3 text-red-700">
+          <p
+            role="alert"
+            className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"
+          >
             Failed to add vendor.
           </p>
         )}
-        <label className="block space-y-1">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Vendor Name
-          </span>
-          <input
-            className="w-full rounded border p-2 text-black dark:text-gray-300"
-            placeholder="Vendor Name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            required
-          />
-        </label>
-        <label className="block space-y-1">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Category
-          </span>
-          <input
-            className="w-full rounded border p-2 text-black dark:text-gray-300"
-            placeholder="Category (e.g. SaaS, Hardware)"
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-            required
-          />
-        </label>
-        <label className="block space-y-1">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Contact Email
-          </span>
-          <input
-            className="w-full rounded border p-2 text-black dark:text-gray-300"
-            placeholder="Contact Email"
-            type="email"
-            value={form.contactEmail}
-            onChange={(e) =>
-              setForm({ ...form, contactEmail: e.target.value })
-            }
-            required
-          />
-        </label>
 
-        <button
-          type="submit"
-          disabled={createVendorMutation.isPending}
-          className="w-full bg-orange-500 text-white p-2 rounded hover:bg-orange-600 disabled:bg-gray-400"
-        >
-          {createVendorMutation.isPending ? "Saving..." : "Add Vendor"}
-        </button>
+        <Field
+          label="Vendor name"
+          placeholder="Acme Supply Co."
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          required
+        />
+
+        <Field
+          label="Category"
+          placeholder="SaaS, Hardware, Logistics…"
+          value={form.category}
+          onChange={(e) => setForm({ ...form, category: e.target.value })}
+          required
+        />
+
+        <Field
+          label="Contact email"
+          placeholder="hello@acme.com"
+          type="email"
+          value={form.contactEmail}
+          onChange={(e) =>
+            setForm({ ...form, contactEmail: e.target.value })
+          }
+          required
+        />
+
+        <div className="pt-1">
+          <motion.button
+            type="submit"
+            disabled={isSaving}
+            whileHover={isSaving ? undefined : { y: -1 }}
+            whileTap={isSaving ? undefined : { scale: 0.99 }}
+            className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-[0.9rem] border border-white/16 bg-accent px-4 py-3.5 text-sm font-semibold text-white shadow-accent transition duration-200 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-200 disabled:cursor-not-allowed disabled:opacity-55"
+          >
+            {isSaving ? (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-r-transparent"
+                />
+                Saving…
+              </>
+            ) : (
+              <>
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="h-4 w-4"
+                >
+                  <path
+                    d="M5 12h13M13 6l6 6-6 6"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Add vendor
+              </>
+            )}
+          </motion.button>
+        </div>
       </form>
-    </section>
+    </motion.section>
   );
 };
 
